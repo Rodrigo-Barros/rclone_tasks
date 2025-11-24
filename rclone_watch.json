@@ -1,0 +1,122 @@
+[
+  {
+    "enabled" : true,
+    "command": "copy",
+    "args": [
+      "--verbose"
+    ],
+    "source": "~/.var/app/com.belmoussaoui.Authenticator/data/authenticator",
+    "destination": [
+      "GoogleDriveCriptografado:/Flatpaks/.var/app/com.belmoussaoui.Authenticator/data/authenticator",
+      "DropboxCriptografado:/Flatpaks/.var/app/com.belmoussaoui.Authenticator/data/authenticator",
+      "OnedriveCriptografado:/Flatpaks/.var/app/com.belmoussaoui.Authenticator/data/authenticator"
+    ]
+  },
+  {
+    "enabled" : true,
+    "command": "copy",
+    "args": [
+      "--verbose"
+    ],
+    "source": "~/.config/rclone",
+    "destination":[
+      "GoogleDriveCriptografado:/Configuracoes/.config/rclone",
+      "DropboxCriptografado:/Configuracoes/.config/rclone",
+      "OnedriveCriptografado:/Configuracoes/.config/rclone"
+    ]
+  },
+  {
+    "enabled" : true,
+    "command": "copy",
+    "args": [
+      "--verbose"
+    ],
+    "source": "~/.passkeez",
+    "destination":[
+      "GoogleDriveCriptografado:/Configuracoes/.passkeez",
+      "DropboxCriptografado:/Configuracoes/.passkeez",
+      "OnedriveCriptografado:/Configuracoes/.passkeez"
+    ]
+  },
+  {
+    "enabled" : true,
+    "command": "copy",
+    "args": [
+      "--verbose"
+    ],
+    "source": "~/Documentos/Obsidian",
+    "destination": [
+      "GoogleDriveCriptografado:/Documentos/Obsidian",
+      "DropboxCriptografado:/Documentos/Obsidian",
+      "OnedriveCriptografado:/Documentos/Obsidian"
+    ]
+  },
+  {
+    "enabled" : true,
+    "command": "copy",
+    "args": [
+      "--verbose",
+      "--exclude=Secure/"
+    ],
+    "source": "Dropbox:",
+    "destination": [
+      "~/Documentos/Clouds/Dropbox"
+    ]
+  },
+  {
+    "enabled" : true,
+    "command": "copy",
+    "args": ["--verbose"],
+    "source": "DropboxCriptografado:",
+    "destination": [
+      "~/Documentos/Clouds/Dropbox/Secure"
+    ]
+  },
+  {
+    "enabled": true,
+    "command": "copy",
+    "args": [
+      "--verbose",
+      "--exclude=Secure/",
+      "--exclude=\"Cofre Pessoal\"/"
+    ],
+    "source": "Onedrive:",
+    "destination": [
+      "~/Documentos/Clouds/Onedrive"
+    ]
+  },
+  {
+    "enabled": true,
+    "command": "copy",
+    "args": [
+      "--verbose"
+    ],
+    "source": "OnedriveCriptografado:",
+    "destination": [
+      "~/Documentos/Clouds/Onedrive/Secure"
+    ]
+  },
+  {
+    "enabled": true,
+    "command": "copy",
+    "args": [
+      "--verbose",
+      "--exclude=Secure/"
+    ],
+    "source": "GoogleDrive:",
+    "destination": [
+      "~/Documentos/Clouds/GoogleDrive"
+    ]
+  },
+  {
+    "enabled": true,
+    "command": "copy",
+    "args": [
+      "--verbose"
+    ],
+    "source": "GoogleDriveCriptografado:",
+    "destination": [
+      "~/Documentos/Clouds/GoogleDrive/Secure"
+    ]
+  }
+]

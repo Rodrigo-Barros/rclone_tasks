@@ -1,0 +1,10 @@
+[Unit]
+Description=Rclone service for Linux
+After=network.target
+
+[Service]
+Environment="RCLONE_PASSWORD_COMMAND=secret-tool lookup app_id rclone"
+ExecStart=/home/rodrigo/Projetos/python/rclone_watch/rclone_watch.py -f /home/rodrigo/Projetos/python/rclone_watch/rclone_watch.json
+
+[Install]
+WantedBy=default.target

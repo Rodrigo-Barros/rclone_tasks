@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Environment="RCLONE_PASSWORD_COMMAND=secret-tool lookup app_id rclone"
-ExecStart=/home/rodrigo/Projetos/python/rclone_watch/rclone_watch.py -f /home/rodrigo/Projetos/python/rclone_watch/rclone_watch.json
+ExecStart=/home/rodrigo/Projetos/python/rclone_tasks/rclone_tasks.py -f /home/rodrigo/Projetos/python/rclone_tasks/rclone_tasks.json
 
 [Install]
 WantedBy=default.target

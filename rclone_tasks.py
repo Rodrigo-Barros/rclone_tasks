@@ -85,7 +85,7 @@ def wait_processes(processes):
     return processes_with_error
 
 def main():
-    parser = ArgumentParser(prog='rclone_watch',
+    parser = ArgumentParser(prog='rclone_tasks',
         formatter_class=RawDescriptionHelpFormatter,
         description='Program to sync multiple folder at once')
     parser.add_argument('-f','--filename',help="file with definition files to sync")

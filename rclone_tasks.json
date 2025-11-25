@@ -21,8 +21,8 @@
     "source": "~/.config/rclone",
     "destination":[
       "GoogleDrive:/.config/rclone",
-      "DropboxCriptografado:/.config/rclone",
-      "OnedriveCriptografado:/.config/rclone"
+      "Dropbox:/.config/rclone",
+      "Onedrive:/.config/rclone"
     ]
   },
   {

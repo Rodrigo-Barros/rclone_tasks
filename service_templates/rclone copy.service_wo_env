@@ -1,0 +1,9 @@
+[Unit]
+Description=Rclone service for Linux
+After=network.target
+
+[Service]
+ExecStart=@INSTALL_DIR/rclone_tasks.py -f @CONFIG_DIR/rclone_tasks.json
+
+[Install]
+WantedBy=default.target

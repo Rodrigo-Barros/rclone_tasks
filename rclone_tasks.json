@@ -18,19 +18,6 @@
     "args": [
       "--verbose"
     ],
-    "source": "~/.config/rclone",
-    "destination":[
-      "GoogleDrive:/.config/rclone",
-      "Dropbox:/.config/rclone",
-      "Onedrive:/.config/rclone"
-    ]
-  },
-  {
-    "enabled" : true,
-    "command": "copy",
-    "args": [
-      "--verbose"
-    ],
     "source": "~/.passkeez",
     "destination":[
       "GoogleDriveCriptografado:/Configuracoes/.passkeez",

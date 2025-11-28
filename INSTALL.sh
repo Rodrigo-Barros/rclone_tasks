@@ -14,6 +14,10 @@ if [ ! -d "${CONFIG_DIR}" ];then
     mkdir -p "${CONFIG_DIR}"
 fi
 
+if [ ! -d "${SYSTEMD_USER_DIR_DIR}" ];then
+    mkdir -p "${SYSTEMD_USER_DIR_DIR}"
+fi
+
 case $RCLONE_CONFIG_CRYPT in
     1|yes|Yes|sim|Sim) SERVICE_FILE="$PROJECT_ROOT/service_templates/rclone.service_w_env";;
     *) SERVICE_FILE="$PROJECT_ROOT/service_templates/rclone.service_wo_env";;

@@ -14,8 +14,8 @@ if [ ! -d "${CONFIG_DIR}" ];then
     mkdir -p "${CONFIG_DIR}"
 fi
 
-if [ ! -d "${SYSTEMD_USER_DIR_DIR}" ];then
-    mkdir -p "${SYSTEMD_USER_DIR_DIR}"
+if [ ! -d "${SYSTEMD_USER_DIR}" ];then
+    mkdir -p "${SYSTEMD_USER_DIR}"
 fi
 
 case $RCLONE_CONFIG_CRYPT in

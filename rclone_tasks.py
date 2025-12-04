@@ -5,7 +5,6 @@ from argparse import ArgumentParser,RawDescriptionHelpFormatter
 from subprocess import Popen,PIPE,TimeoutExpired
 from time import sleep
 import shlex
-from tkinter.constants import FALSE
 
 def get_tasks(config_file):
     return json.load(config_file)

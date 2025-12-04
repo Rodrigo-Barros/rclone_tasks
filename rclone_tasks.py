@@ -29,50 +29,7 @@ def filter_active_tasks(tasks):
     return active_tasks
 
 
-def copy(tasks,execute):
-    processes = []
-    for task in tasks:
-        source       = get_path(task['source'])
-        destinations = task['destination']
-        command      = task['command']
-
-        for i in range(0,len(destinations)):
-            args         = []
-            destination = get_path(destinations[i])
-            args.append(source)
-            args.append(destination)
-            if 'args' in task:
-                args = args + task['args']
-
-            if exists(source):
-                source = realpath(source)
-
-            binary = ['/usr/bin/rclone']
-            cmd = []
-            cmd = binary + [command] + args
-            cmd = " ".join(cmd)
-            if execute:
-                print("Executando: %s\r" % " ".join(cmd))
-                cmd = shlex.split(cmd)
-                process = Popen(args=cmd,stdout=PIPE,stdin=PIPE,universal_newlines=True,text=True)
-                processes.append(process)
-            else:
-                print("%s" % cmd)
-
-            if(len(destinations) - 1 == i):
-                print("\r")
-
-    processes_with_error = wait_processes(processes)
-    if len(processes_with_error) > 0:
-        for process_with_error in processes_with_error:
-            print("O Comando %s saiu com códido de erro: %d" % (process_with_error.args,process_with_error.returncode))
-            print("Detalhes do erro: %s" % (process_with_error.errors))
-        exit(1)
-
-    pass
-
-
-def process_tasks(tasks,execute,max_spawn_processes=4):
+def process_tasks(tasks,execute,max_spawn_processes):
     commands    = []
     processes   = []
     active_tasks = filter_active_tasks(tasks)
@@ -97,7 +54,7 @@ def process_tasks(tasks,execute,max_spawn_processes=4):
             cmd = binary + [command] + args
             cmd = " ".join(cmd)
             if execute:
-                print("Executando: %s\r" % cmd)
+                print("Running: %s\r" % cmd)
                 cmd = shlex.split(cmd)
                 commands.append({"args":cmd})
             else:
@@ -107,7 +64,7 @@ def process_tasks(tasks,execute,max_spawn_processes=4):
                 print("\r")
 
     for command in commands:
-        process = Popen(args=command['args'],stdout=PIPE,stdin=PIPE,universal_newlines=True,text=True)
+        process = Popen(args=command['args'],stdout=PIPE,stdin=PIPE,stderr=PIPE,universal_newlines=True,text=True)
         processes.append(process)
         while True:
             process_running = 0
@@ -115,7 +72,7 @@ def process_tasks(tasks,execute,max_spawn_processes=4):
             process_queued  = 0
             for process in processes:
                 try:
-                    stdout,stderr = process.communicate(timeout=0.01)
+                    stdout,stderr = process.communicate(timeout=1)
                     process_ended += 1
                 except TimeoutExpired:
                     process_running += 1
@@ -130,6 +87,7 @@ def process_tasks(tasks,execute,max_spawn_processes=4):
     processes_with_error = wait_processes(processes)
     if len(processes_with_error) > 0:
         for process_with_error in processes_with_error:
+            process_stdout,process_stderr = process_with_error.communicate()
             print("""
                 Command:  %s
                 Exit:     %s
@@ -139,8 +97,8 @@ def process_tasks(tasks,execute,max_spawn_processes=4):
                 """ %
                 (" ".join(process_with_error.args),
                     process_with_error.returncode,
-                    process_with_error.stdout,
-                    process_with_error.stderr
+                    process_stdout,
+                    process_stderr
                 )
             )
 

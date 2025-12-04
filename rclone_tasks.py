@@ -2,8 +2,10 @@
 import json
 from os.path import realpath,exists,expanduser,expandvars
 from argparse import ArgumentParser,RawDescriptionHelpFormatter
-from subprocess import Popen,PIPE
+from subprocess import Popen,PIPE,TimeoutExpired
+from time import sleep
 import shlex
+from tkinter.constants import FALSE
 
 def get_tasks(config_file):
     return json.load(config_file)
@@ -70,9 +72,79 @@ def copy(tasks,execute):
     pass
 
 
-def process_tasks(tasks,execute):
+def process_tasks(tasks,execute,max_spawn_processes=4):
+    commands    = []
+    processes   = []
     active_tasks = filter_active_tasks(tasks)
-    copy(active_tasks,execute)
+    for task in active_tasks:
+        source       = get_path(task['source'])
+        destinations = task['destination']
+        command      = task['command']
+
+        for i in range(0,len(destinations)):
+            args         = []
+            destination = get_path(destinations[i])
+            args.append(source)
+            args.append(destination)
+            if 'args' in task:
+                args = args + task['args']
+
+            if exists(source):
+                source = realpath(source)
+
+            binary = ['/usr/bin/rclone']
+            cmd = []
+            cmd = binary + [command] + args
+            cmd = " ".join(cmd)
+            if execute:
+                print("Executando: %s\r" % cmd)
+                cmd = shlex.split(cmd)
+                commands.append({"args":cmd})
+            else:
+                print("%s" % cmd)
+
+            if(len(destinations) - 1 == i):
+                print("\r")
+
+    for command in commands:
+        process = Popen(args=command['args'],stdout=PIPE,stdin=PIPE,universal_newlines=True,text=True)
+        processes.append(process)
+        while True:
+            process_running = 0
+            process_ended   = 0
+            process_queued  = 0
+            for process in processes:
+                try:
+                    stdout,stderr = process.communicate(timeout=0.01)
+                    process_ended += 1
+                except TimeoutExpired:
+                    process_running += 1
+
+            if process_running > max_spawn_processes:
+                continue
+
+            process_queued = len(commands) - (process_running + process_ended)
+
+            print("Running: %d, Ended: %s, Queued: %s\r" % (process_running,process_ended,process_queued))
+            break
+    processes_with_error = wait_processes(processes)
+    if len(processes_with_error) > 0:
+        for process_with_error in processes_with_error:
+            print("""
+                Command:  %s
+                Exit:     %s
+                Stdout:   %s
+                Stderr:   %s
+                ------------
+                """ %
+                (" ".join(process_with_error.args),
+                    process_with_error.returncode,
+                    process_with_error.stdout,
+                    process_with_error.stderr
+                )
+            )
+
+    pass
 
 
 def wait_processes(processes):
@@ -90,6 +162,7 @@ def main():
         description='Program to sync multiple folder at once')
     parser.add_argument('-f','--filename',help="file with definition files to sync")
     parser.add_argument('-n','--dry-run',help="print command instead of execute them",action="store_true")
+    parser.add_argument('-p','--processes',help='max concurrent running processes',default=4,type=int)
     args  = parser.parse_args()
 
 
@@ -101,7 +174,7 @@ def main():
 
         tasks = get_tasks(config_file)
         execute = not args.dry_run
-        process_tasks(tasks,execute)
+        process_tasks(tasks,execute,args.processes)
         config_file.close()
     pass
 
